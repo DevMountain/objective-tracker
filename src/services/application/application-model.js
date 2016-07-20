@@ -10,9 +10,8 @@ const Schema = mongoose.Schema;
 
 const applicationSchema = new Schema({
   name: { type: String, required: true },
-  objectiveSecret: String,
+  objectiveSecret:String,
   objectiveKey:String,
-  
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
 });

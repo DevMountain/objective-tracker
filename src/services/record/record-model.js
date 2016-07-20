@@ -11,7 +11,8 @@ const Schema = mongoose.Schema;
 const recordSchema = new Schema({
   _trackable: { type: mongoose.Schema.Types.ObjectId, ref:"trackable", required: true },
   _user: {type:mongoose.Schema.Types.ObjectId, ref:"user", required:true},
-  _witness: {type:mongoose.Schema.Types.ObjectId, ref:"user", required:true},
+  _application: {type:mongoose.Schema.Types.ObjectId, ref:"application"},
+  _witness: {type:mongoose.Schema.Types.ObjectId, ref:"user"},
   note:String,
   quantifier:Number,
   createdAt: { type: Date, 'default': Date.now },

@@ -14,6 +14,8 @@ const socketio = require('feathers-socketio');
 const middleware = require('./middleware');
 const services = require('./services');
 
+const devmtnAuth = require('./middleware/devmtnAuth');
+
 const app = feathers();
 
 app.configure(configuration(path.join(__dirname, '..')));
@@ -24,8 +26,11 @@ app.use(compress())
   .use(favicon( path.join(app.get('public'), 'favicon.ico') ))
   .use('/', serveStatic( app.get('public') ))
   .use(bodyParser.json())
-  .use(bodyParser.urlencoded({ extended: true }))
-  .configure(hooks())
+  .use(bodyParser.urlencoded({ extended: true }));
+  
+  devmtnAuth(app);
+
+app.configure(hooks())
   .configure(rest())
   .configure(socketio())
   .configure(services)

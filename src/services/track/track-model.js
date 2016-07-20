@@ -1,15 +1,14 @@
 'use strict';
 
-// module-model.js - A mongoose model
+// track-model.js - A mongoose model
 //
-// A module is a collection of trackable objects.
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const moduleSchema = new Schema({
+const trackSchema = new Schema({
   description: { type: String, required: true },
   name: {type:String, required:true},
   _trackables:[{ type: mongoose.Schema.Types.ObjectId, ref:"trackable", required: true }],
@@ -17,6 +16,6 @@ const moduleSchema = new Schema({
   updatedAt: { type: Date, 'default': Date.now }
 });
 
-const moduleModel = mongoose.model('module', moduleSchema);
+const trackModel = mongoose.model('track', trackSchema);
 
-module.exports = moduleModel;
+module.exports = trackModel;
