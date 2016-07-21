@@ -10,8 +10,11 @@ const Schema = mongoose.Schema;
 
 const trackableSchema = new Schema({
   name: { type: String, required: true },
+  category:{type:String, required:true},
+  group:String
   description:String,
-  type:{type:String, enum['Boolean', 'Rating', 'Signature']},
+  quantifierType:{type:String, enum['Boolean', 'Rating']},
+  requireSignature:{type:Boolean, default:false},
   _applications:[{ type: mongoose.Schema.Types.ObjectId, ref:"application" }],
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
