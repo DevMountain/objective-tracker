@@ -10,9 +10,9 @@ exports.before = {
   find: [],
   get: [],
   create: [appHooks.getApp(), appHooks.decodeToken(), appHooks.getTrackable(), appHooks.getUser(), appHooks.getWitness()],
-  update: [appHooks.getApp()],
-  patch: [],
-  remove: []
+  update: [globalHooks.close()],
+  patch: [globalHooks.close()],
+  remove: [globalHooks.close()]
 };
 
 exports.after = {

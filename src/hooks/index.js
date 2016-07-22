@@ -11,3 +11,9 @@ exports.myHook = function(options) {
     console.log('My custom global hook ran. Feathers is awesome!');
   };
 };
+
+exports.close = function(options) {
+  return function(hook) {
+    throw new Error("This action is closed.");
+  };
+};

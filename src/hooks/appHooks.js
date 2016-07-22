@@ -67,7 +67,7 @@ exports.getUser = function(options){
     return User.findOne({devmtnId:hook.decodedToken.user})
     .then(function(response){
       if(!response){
-        return User.create({devmtnId:hook.decodedToken.user}).then(function(reponse){
+        return User.create({devmtnId:hook.decodedToken.user}).then(function(response){
           hook.user = response;
           hook.data._user = response._id;
           return hook;
