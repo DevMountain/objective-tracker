@@ -5,9 +5,9 @@ const hooks = require('feathers-hooks');
 const appHooks = require('../../../hooks/appHooks');
 
 exports.before = {
-  all: [appHooks.getApp(), appHooks.decodeToken()],
-  find: [appHooks.getApp(), appHooks.decodeToken()],
-  get: [appHooks.getApp(), appHooks.decodeToken()],
+  all: [],
+  find: [appHooks.verifyQueryToken(true)],
+  get: [appHooks.verifyQueryToken(true)],
   create: [],
   update: [],
   patch: [globalHooks.close()],

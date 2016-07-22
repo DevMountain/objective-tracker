@@ -12,6 +12,28 @@ const User = require('../services/user/user-model');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
+exports.verifyQueryToken = function(queryApp){
+  return function(hook){
+    var query = {name:hook.params.query.application};
+    return Application.findOne(query)
+    .then(function(response){
+      if (!response){
+        throw new error("Application not found");
+      }
+      var decoded = jwt.verify(hook.params.query.token, response.appSecret);
+
+      delete decoded.iat;
+      if(queryApp){
+          decoded._application = response._id;
+      }
+
+      console.log(decoded);
+      hook.params.query = decoded;
+      return hook;
+    })
+  }
+}
+
 exports.getApp = function(options) {
   return function(hook) {
     return Application
