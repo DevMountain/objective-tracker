@@ -1,15 +1,16 @@
 'use strict';
 
 const globalHooks = require('../../../hooks');
-const hooks = require('feathers-hooks');
+const appHooks = require('../../../hooks/appHooks');
 
+const hooks = require('feathers-hooks');
 
 exports.before = {
   all: [],
   find: [],
   get: [],
-  create: [],
-  update: [],
+  create: [appHooks.getApp(), appHooks.decodeToken(), appHooks.getTrackable(), appHooks.getUser(), appHooks.getWitness()],
+  update: [appHooks.getApp()],
   patch: [],
   remove: []
 };

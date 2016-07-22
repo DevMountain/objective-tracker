@@ -13,7 +13,7 @@ const bodyParser = require('body-parser');
 const socketio = require('feathers-socketio');
 const middleware = require('./middleware');
 const services = require('./services');
-
+const jwt = require('jsonwebtoken');
 const app = feathers();
 
 app.configure(configuration(path.join(__dirname, '..')));
@@ -25,6 +25,11 @@ app.use(compress())
   .use('/', serveStatic( app.get('public') ))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
+  .post('/api/test', function(req, res, next){
+    console.log(req.body);
+    var decoded = jwt.verify(req.body.token, 'shhhhh');
+    console.log(decoded);
+  })
   .configure(hooks())
   .configure(rest())
   .configure(socketio())
@@ -32,3 +37,6 @@ app.use(compress())
   .configure(middleware);
 
 module.exports = app;
+
+// console.log("Gah", app.service('applications'));
+// console.log("Sup");
