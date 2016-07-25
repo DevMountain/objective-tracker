@@ -17,3 +17,9 @@ exports.close = function(options) {
     throw new Error("This action is closed.");
   };
 };
+
+exports.populateOn = function(options){
+  return function(hook){
+    hook.params.query.$populate = options;
+  }
+}
