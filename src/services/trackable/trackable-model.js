@@ -15,21 +15,11 @@ const trackableSchema = new Schema({
   description:String,
   quantifierType:{type:String, enum:['Boolean', 'Rating']},
   requireSignature:{type:Boolean, default:false},
-  _application:{ type: mongoose.Schema.Types.ObjectId, ref:"application" },
+  _application:{ type: mongoose.Schema.Types.ObjectId,
+     ref:"application" },
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
 });
-
-trackableSchema.pre('save', function(next){
-  var newInfo = this;
-  trackableModel.findOne({name:this.name, _application:mongoose.Types.ObjectId(this._application)})
-  .exec((err, response)=>{
-    if(response){
-      Object.assign(newInfo, response);
-    }
-    next();
-  });
-})
 
 const trackableModel = mongoose.model('trackable', trackableSchema);
 

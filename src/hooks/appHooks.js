@@ -36,6 +36,7 @@ exports.verifyQueryToken = function(queryApp){
 
 exports.getApp = function(options) {
   return function(hook) {
+    if (hook.data._application) return hook;
     return Application
       .findOne({name:hook.data.application})
       .then(function(response){
@@ -121,5 +122,35 @@ exports.getWitness=function(options){
         }
       });
     }
+  }
+}
+
+exports.checkDuplicateTrackable = function(){
+  return function(hook){
+    return Trackable
+    .findOne({name:hook.data.name,
+       _application:mongoose.Types.ObjectId(hook.data._application)})
+    .then(function(response){
+      // console.log(response);
+      if (response){
+        hook.data._id = response._id;
+        hook.id = response.id;
+      }
+      return hook;
+    })
+  }
+}
+
+exports.preventDuplicate = function(options){
+  // console.log("Being setup?");
+  return function(hook){
+    // console.log("Hit", hook.data);
+
+    if (hook.data._id){
+      // console.log(hook.data._id);
+
+      throw new Error("Application already has trackable with that name");
+    }
+    return hook;
   }
 }
