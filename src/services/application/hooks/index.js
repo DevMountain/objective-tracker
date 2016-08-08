@@ -6,8 +6,8 @@ const hooks = require('feathers-hooks');
 
 exports.before = {
   all: [],
-  find: [],
-  get: [],
+  find: [globalHooks.close()],
+  get: [globalHooks.close()],
   create: [],
   update: [globalHooks.close()],
   patch: [globalHooks.close()],

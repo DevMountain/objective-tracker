@@ -10,7 +10,7 @@ module.exports = function() {
   const options = {
     Model: record,
     paginate: {
-      default: 100,
+      default: 1,
       max: 500
     }
   };

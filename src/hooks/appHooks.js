@@ -15,6 +15,7 @@ const mongoose = require('mongoose');
 exports.verifyQueryToken = function(queryApp){
   return function(hook){
     var query = {name:hook.params.query.application};
+    console.log(query);
     return Application.findOne(query)
     .then(function(response){
       if (!response){
@@ -29,6 +30,7 @@ exports.verifyQueryToken = function(queryApp){
 
       console.log(decoded);
       hook.params.query = decoded;
+      console.log(hook.params.query);
       return hook;
     })
   }
@@ -54,12 +56,12 @@ exports.decodeToken = function(options) {
   return function(hook) {
     hook.decodedToken = jwt.verify(hook.data.token, hook.app.appSecret);
     Object.assign(hook.data, hook.decodedToken);
-    //return hook;
   };
 };
 
 exports.getTrackable = function(options) {
   return function(hook) {
+    if (hook.data._trackable) return hook;
     return Trackable.findOne({
       name:hook.decodedToken.trackable,
       _application:mongoose.Types.ObjectId(hook.app._id)}
@@ -84,6 +86,7 @@ exports.getTrackable = function(options) {
 
 exports.getUser = function(options){
   return function(hook){
+  if (hook.data._user) return hook;
   if (!hook.decodedToken.user){
     throw new Error('User devmtnId is missing');
   }
@@ -106,6 +109,7 @@ exports.getUser = function(options){
 
 exports.getWitness=function(options){
   return function(hook){
+    if(hook.data._witness) return hook;
     if(hook.data.witness){
       return User.findOne({devmtnId:hook.decodedToken.witness})
       .then(function(response){
@@ -131,7 +135,6 @@ exports.checkDuplicateTrackable = function(){
     .findOne({name:hook.data.name,
        _application:mongoose.Types.ObjectId(hook.data._application)})
     .then(function(response){
-      // console.log(response);
       if (response){
         hook.data._id = response._id;
         hook.id = response.id;
@@ -142,13 +145,8 @@ exports.checkDuplicateTrackable = function(){
 }
 
 exports.preventDuplicate = function(options){
-  // console.log("Being setup?");
   return function(hook){
-    // console.log("Hit", hook.data);
-
     if (hook.data._id){
-      // console.log(hook.data._id);
-
       throw new Error("Application already has trackable with that name");
     }
     return hook;
