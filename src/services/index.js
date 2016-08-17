@@ -10,7 +10,10 @@ module.exports = function() {
 
   mongoose.connect(app.get('mongodb'));
   mongoose.Promise = global.Promise;
-
+  app.use(function(req, res, next){
+    console.log(req.method,"--" , req.url);
+    next();
+  })
   app.configure(application);
   app.configure(record);
   app.configure(track);

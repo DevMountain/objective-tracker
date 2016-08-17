@@ -15,22 +15,19 @@ const mongoose = require('mongoose');
 exports.verifyQueryToken = function(queryApp){
   return function(hook){
     var query = {name:hook.params.query.application};
-    console.log(query);
     return Application.findOne(query)
     .then(function(response){
       if (!response){
         throw new error("Application not found");
       }
+      hook.params.query.token = hook.params.query.token.trim();
       var decoded = jwt.verify(hook.params.query.token, response.appSecret);
-
       delete decoded.iat;
       if(queryApp){
           decoded._application = response._id;
       }
-
-      console.log(decoded);
       hook.params.query = decoded;
-      console.log(hook.params.query);
+      console.log(decoded);
       return hook;
     })
   }
@@ -38,10 +35,14 @@ exports.verifyQueryToken = function(queryApp){
 
 exports.getApp = function(options) {
   return function(hook) {
+    console.log(hook.data);
     if (hook.data._application) return hook;
     return Application
       .findOne({name:hook.data.application})
       .then(function(response){
+        if (!response){
+          throw new Error('You are not authorized. Must send the App you are authorizing through.');
+        }
         hook.app = response;
         hook.data._application = hook.app._id;
         if (!hook.app.appSecret){
@@ -54,7 +55,10 @@ exports.getApp = function(options) {
 
 exports.decodeToken = function(options) {
   return function(hook) {
-    hook.decodedToken = jwt.verify(hook.data.token, hook.app.appSecret);
+    if (!hook.data.token) return hook
+    console.log(hook.data.token,"\n")
+    console.log(hook.app.appSecret,"\n")
+    hook.decodedToken = jwt.verify(hook.data.token.trim(), hook.app.appSecret);
     Object.assign(hook.data, hook.decodedToken);
   };
 };
