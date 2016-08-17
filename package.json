@@ -1,7 +1,7 @@
 {
   "name": "objective-tracker",
   "description": "RESTFUL API that can be hit to record objectives, or queried to see progress",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homepage": "",
   "main": "src/",
   "keywords": [
